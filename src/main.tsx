@@ -1,14 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
-import App from './App'
+import { Authenticator } from "./features/auth/Authenticator.tsx";
 
-const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement
-    );
-
-    root.render(
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
     <BrowserRouter>
-        <App />
+        <Authenticator>
+          <App />
+        </Authenticator>
     </BrowserRouter>
-    );
+  </StrictMode>,
+);
