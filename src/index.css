@@ -34,15 +34,23 @@
   :root {
     --text: #9ca3af;
     --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
+    --bg: #0c4a6e;
+    --border: #0369a1;
+    --code-bg: #075985;
+    --accent: #38bdf8;
+    --accent-bg: rgba(56, 189, 248, 0.15);
+    --accent-border: rgba(56, 189, 248, 0.5);
+    --social-bg: rgba(3, 105, 161, 0.5);
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #root {
+    background: linear-gradient(160deg, #0c4a6e 0%, #075985 30%, #0369a1 70%, #0284c7 100%);
+  }
+
+  body {
+    background: linear-gradient(160deg, #0c4a6e 0%, #075985 30%, #0369a1 70%, #0284c7 100%);
   }
 
   #social .button-icon {
@@ -51,19 +59,21 @@
 }
 
 #root {
-  width: 1126px;
+  width: 100%;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  background: linear-gradient(160deg, #e0f2fe 0%, #bae6fd 30%, #7dd3fc 70%, #38bdf8 100%);
 }
 
 body {
   margin: 0;
+  background: linear-gradient(160deg, #e0f2fe 0%, #bae6fd 30%, #7dd3fc 70%, #38bdf8 100%);
+  min-height: 100svh;
 }
 
 h1,

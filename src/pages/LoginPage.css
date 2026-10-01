@@ -1,0 +1,299 @@
+/* Contenedor principal de la pagina de login */
+.login-page {
+  min-height: 100svh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1.25rem;
+  background: linear-gradient(160deg, #0c4a6e 0%, #075985 30%, #0369a1 70%, #0284c7 100%);
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+/* Fondo fijo para evitar espacios blancos al hacer scroll */
+.login-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(160deg, #0c4a6e 0%, #075985 30%, #0369a1 70%, #0284c7 100%);
+  z-index: -1;
+}
+
+/* Tarjeta centrada con efecto glassmorphism */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 8px 32px rgba(56, 189, 248, 0.15);
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Titulo principal de la tarjeta */
+.login-card h1 {
+  font-size: clamp(1.5rem, 5vw, 1.75rem);
+  font-weight: 700;
+  color: #0369a1;
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+}
+
+/* Subtitulo descriptivo debajo del titulo */
+.login-card .subtitle {
+  color: #0284c7;
+  font-size: clamp(0.875rem, 3vw, 0.95rem);
+  margin-bottom: 1.75rem;
+  line-height: 1.4;
+}
+
+/* Contenedor del formulario con disposicion vertical */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Campos de texto del formulario (email y password) */
+.login-form input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #bae6fd;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: var(--sans);
+  color: #0c4a6e;
+  background: rgba(255, 255, 255, 0.9);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+/* Texto placeholder de los campos */
+.login-form input::placeholder {
+  color: #7dd3fc;
+  opacity: 0.8;
+}
+
+/* Estado de foco de los campos de entrada */
+.login-form input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+}
+
+/* Boton principal de login con gradiente */
+.btn-primary {
+  width: 100%;
+  padding: 0.875rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--sans);
+  color: #fff;
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 50%, #0ea5e9 100%);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
+}
+
+/* Efecto hover del boton principal */
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.45);
+}
+
+/* Efecto de presion del boton principal */
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Linea divisoria entre formulario y boton de Google */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+  color: #38bdf8;
+  font-size: 0.8rem;
+}
+
+/* Lineas decorativas a los lados del texto divisor */
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #bae6fd, transparent);
+}
+
+/* Boton de login con Google */
+.btn-google {
+  width: 100%;
+  padding: 0.875rem;
+  border: 2px solid #bae6fd;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: var(--sans);
+  color: #0369a1;
+  background: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+/* Efecto hover del boton de Google */
+.btn-google:hover {
+  background: rgba(224, 242, 254, 0.8);
+  border-color: #7dd3fc;
+  transform: translateY(-1px);
+}
+
+/* Icono SVG de Google dentro del boton */
+.btn-google svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Mensaje de error mostrado cuando el login falla */
+.login-error {
+  color: #e11d48;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 228, 230, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 182, 193, 0.5);
+  line-height: 1.4;
+}
+
+/* Pie de pagina con enlace a registro */
+.login-footer {
+  margin-top: 1.25rem;
+  color: #0284c7;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* Enlace de registro dentro del pie de pagina */
+.login-footer a {
+  color: #0369a1;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+/* Efecto hover del enlace de registro */
+.login-footer a:hover {
+  color: #0ea5e9;
+  text-decoration: underline;
+}
+
+/* Ajustes para tablets y pantallas medianas */
+@media (min-width: 768px) {
+  .login-page {
+    padding: 2rem;
+  }
+
+  .login-card {
+    padding: 2.5rem 2rem;
+  }
+}
+
+/* Ajustes para pantallas grandes (desktop) */
+@media (min-width: 1024px) {
+  .login-card {
+    max-width: 440px;
+    padding: 3rem 2.5rem;
+  }
+}
+
+/* Tema oscuro con tonos azules profundos */
+@media (prefers-color-scheme: dark) {
+  .login-page {
+    background: linear-gradient(160deg, #0c4a6e 0%, #075985 30%, #0369a1 70%, #0284c7 100%);
+  }
+
+  .login-page::before {
+    background: linear-gradient(160deg, #0c4a6e 0%, #075985 30%, #0369a1 70%, #0284c7 100%);
+  }
+
+  .login-card {
+    background: rgba(12, 74, 110, 0.75);
+    border-color: rgba(125, 211, 252, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .login-card h1 {
+    color: #e0f2fe;
+  }
+
+  .login-card .subtitle {
+    color: #bae6fd;
+  }
+
+  .login-form input {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #0369a1;
+    color: #e0f2fe;
+  }
+
+  .login-form input::placeholder {
+    color: #7dd3fc;
+    opacity: 0.6;
+  }
+
+  .login-form input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
+  }
+
+  .divider {
+    color: #7dd3fc;
+  }
+
+  .divider::before,
+  .divider::after {
+    background: linear-gradient(90deg, transparent, #0369a1, transparent);
+  }
+
+  .btn-google {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #0369a1;
+    color: #e0f2fe;
+  }
+
+  .btn-google:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #38bdf8;
+  }
+
+  .login-error {
+    background: rgba(225, 29, 72, 0.15);
+    border-color: rgba(225, 29, 72, 0.3);
+    color: #fda4af;
+  }
+
+  .login-footer {
+    color: #bae6fd;
+  }
+
+  .login-footer a {
+    color: #e0f2fe;
+  }
+
+  .login-footer a:hover {
+    color: #7dd3fc;
+  }
+}
