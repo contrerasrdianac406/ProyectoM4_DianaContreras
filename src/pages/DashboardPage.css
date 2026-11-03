@@ -1,187 +1,534 @@
-/* Contenedor principal del dashboard con fondo oscuro profesional */
+/* Contenedor principal del dashboard con el degradado azul de LoginPage */
 .dashboard-page {
   min-height: 100svh;
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem 1.25rem;
-  background: linear-gradient(145deg, #0a1628 0%, #0f1f3d 25%, #132a4f 50%, #16335c 75%, #1a3a6b 100%);
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
+  background: linear-gradient(160deg, #0c4a6e 0%, #075985 30%, #0369a1 70%, #0284c7 100%);
   box-sizing: border-box;
   position: relative;
   z-index: 1;
 }
 
-/* Fondo fijo para evitar espacios blancos al hacer scroll */
+/* Fondo fijo para que el degradado cubra toda la pantalla al hacer scroll */
 .dashboard-page::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: linear-gradient(145deg, #0a1628 0%, #0f1f3d 25%, #132a4f 50%, #16335c 75%, #1a3a6b 100%);
+  background: linear-gradient(160deg, #0c4a6e 0%, #075985 30%, #0369a1 70%, #0284c7 100%);
   z-index: -1;
 }
 
-/* Tarjeta principal con fondo blanco puro y sombra elegante */
-.dashboard-card {
-  width: 100%;
-  max-width: 420px;
-  background: #FFFFFF;
-  border-radius: 20px;
-  padding: 2rem 1.5rem;
-  box-shadow:
-    0 4px 6px rgba(0, 0, 0, 0.3),
-    0 10px 30px rgba(0, 0, 0, 0.4);
-  text-align: center;
-  border: 1px solid #E5E7EB;
+/* Oculta los <br> manuales del JSX para controlar el espaciado desde CSS */
+.dashboard-page > br {
+  display: none;
 }
 
-/* Titulo principal con color de acento azul */
+/* Header de la pagina: ocupa todo el ancho y queda fijo arriba */
+.dashboard-card {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "title"
+    "subtitle"
+    "info"
+    "logout";
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #E5E7EB;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+/* Titulo principal del header */
 .dashboard-card h1 {
-  font-size: clamp(1.5rem, 5vw, 1.75rem);
+  grid-area: title;
+  margin: 0;
+  font-size: clamp(1.15rem, 4vw, 1.45rem);
   font-weight: 700;
   color: #005691;
-  margin: 0 0 0.5rem;
   line-height: 1.2;
+  text-align: left;
 }
 
-/* Subtitulo con gris neutro sutil */
+/* Mensaje de bienvenida del header */
 .dashboard-card .subtitle {
+  grid-area: subtitle;
+  margin: 0;
   color: #6B7280;
-  font-size: clamp(0.875rem, 3vw, 0.95rem);
-  margin-bottom: 1.75rem;
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
   line-height: 1.4;
+  text-align: left;
 }
 
-/* Contenedor de informacion del usuario con borde perla */
-.user-info {
-  display: flex;
-  flex-direction: column;
+/* Bloque de usuario: avatar, email y UUID organizados con grid */
+.dashboard-card .user-info {
+  grid-area: info;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "avatar email"
+    "avatar uid";
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  padding: 1.25rem 1rem;
+  column-gap: 0.75rem;
+  row-gap: 0.2rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem;
   background: #F9FAFB;
-  border-radius: 14px;
   border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  box-sizing: border-box;
 }
 
-/* Avatar circular del usuario con gradiente azul acento */
-.user-info .user-icon {
-  width: 52px;
-  height: 52px;
+/* Avatar circular con la inicial del usuario */
+.dashboard-card .user-info .user-icon {
+  grid-area: avatar;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: linear-gradient(135deg, #005691 0%, #0069b4 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #FFFFFF;
-  font-size: 1.35rem;
+  font-size: 1rem;
   font-weight: 700;
   box-shadow: 0 4px 12px rgba(0, 86, 145, 0.3);
+  flex-shrink: 0;
 }
 
-/* Email del usuario con gris oscuro */
-.user-info .user-email {
+/* Email del usuario */
+.dashboard-card .user-info .user-email {
+  grid-area: email;
+  margin: 0;
   color: #374151;
-  font-size: 0.95rem;
+  font-size: clamp(0.78rem, 2.5vw, 0.88rem);
   font-weight: 500;
   word-break: break-all;
+  text-align: left;
 }
 
-/* Boton de cerrar sesion con color de acento azul */
-.btn-logout {
+/* UUID del usuario mostrado como etiqueta sutil */
+.dashboard-card .user-info .user-id {
+  grid-area: uid;
+  justify-self: start;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.15rem 0.55rem;
+  color: #6B7280;
+  font-family: var(--mono);
+  font-size: clamp(0.65rem, 2vw, 0.72rem);
+  letter-spacing: 0.02em;
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  border-radius: 999px;
+  word-break: break-all;
+  box-sizing: border-box;
+}
+
+/* Boton de cerrar sesion */
+.dashboard-card .btn-logout {
+  grid-area: logout;
+  justify-self: stretch;
   width: 100%;
-  padding: 0.875rem;
+  padding: 0.7rem 1rem;
   border: none;
-  border-radius: 12px;
-  font-size: 1rem;
+  border-radius: 10px;
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
   font-weight: 600;
   font-family: var(--sans);
   color: #FFFFFF;
   background: #005691;
   cursor: pointer;
-  transition: all 0.2s ease;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 
-/* Efecto hover del boton de logout */
-.btn-logout:hover {
+/* Efecto hover del boton de cerrar sesion */
+.dashboard-card .btn-logout:hover {
   background: #0069b4;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 86, 145, 0.3);
 }
 
-/* Efecto de presion del boton de logout */
-.btn-logout:active {
+/* Efecto de presion del boton de cerrar sesion */
+.dashboard-card .btn-logout:active {
   transform: translateY(0);
+}
+
+/* Estados de carga y error: la tarjeta es el unico hijo y se centra */
+.dashboard-card:only-child {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: calc(100% - 2.5rem);
+  max-width: 420px;
+  margin: auto;
+  padding: 2rem 1.5rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Titulo centrado en estados de carga y error */
+.dashboard-card:only-child h1 {
+  grid-area: auto;
+  text-align: center;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+}
+
+/* Panel blanco de tareas al 100% del ancho de la pantalla */
+.dashboard-card2 {
+  flex: 1;
+  width: 100%;
+  max-width: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding: 1.5rem 1.25rem 2.5rem;
+  background: #FFFFFF;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+/* Oculta los <br> dentro del panel y del formulario */
+.dashboard-card2 > br,
+.dashboard-card2 form br {
+  display: none;
+}
+
+/* Titulo de la seccion de tareas */
+.dashboard-card2 h1 {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #005691;
+  font-size: clamp(1.25rem, 4vw, 1.6rem);
+  font-weight: 700;
+  text-align: left;
+}
+
+/* Formulario de nueva tarea: en movil los campos se apilan */
+.dashboard-card2 form {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "labelTitle"
+    "inputTitle"
+    "labelDesc"
+    "inputDesc"
+    "button";
+  gap: 0.4rem;
+  margin: 0;
+  padding: 1.25rem;
+  background: #d1e1f0;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  box-sizing: border-box;
+}
+
+/* Etiquetas del formulario */
+.dashboard-card2 form label {
+  color: #374151;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* Ubicacion de cada etiqueta y campo dentro del grid del formulario */
+.dashboard-card2 form label[for="task-title"] {
+  grid-area: labelTitle;
+}
+
+.dashboard-card2 form label[for="task-description"] {
+  grid-area: labelDesc;
+}
+
+.dashboard-card2 form #task-title {
+  grid-area: inputTitle;
+}
+
+.dashboard-card2 form #task-description {
+  grid-area: inputDesc;
+}
+
+/* Campos de texto del formulario: ocupan el ancho de su columna */
+.dashboard-card2 form input {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: var(--sans);
+  color: #111827;
+  background: #FFFFFF;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Placeholder de los campos del formulario */
+.dashboard-card2 form input::placeholder {
+  color: #9CA3AF;
+}
+
+/* Estado de foco de los campos del formulario */
+.dashboard-card2 form input:focus {
+  outline: none;
+  border-color: #005691;
+  box-shadow: 0 0 0 3px rgba(0, 86, 145, 0.12);
+}
+
+/* Boton de agregar tarea */
+.dashboard-card2 form .button {
+  grid-area: button;
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0.85rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #005691 0%, #0069b4 100%);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+}
+
+/* Efecto hover del boton de agregar tarea */
+.dashboard-card2 form .button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 86, 145, 0.35);
+}
+
+/* Boton de agregar tarea deshabilitado */
+.dashboard-card2 form .button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Tarjeta independiente de cada tarea creada */
+.dashboard-card2 > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "title title"
+    "desc desc"
+    "meta meta"
+    "toggle delete";
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0;
+  padding: 1rem 1.1rem;
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-left: 4px solid #005691;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  text-align: left;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+/* Efecto hover de la tarjeta de tarea */
+.dashboard-card2 > div:hover {
+  transform: translateY(-2px);
+  border-color: #BAE6FD;
+  box-shadow: 0 8px 20px rgba(0, 86, 145, 0.12);
+}
+
+/* Textos generales dentro de la tarjeta de tarea */
+.dashboard-card2 > div > p {
+  margin: 0;
+  color: #6B7280;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
+/* Titulo de la tarea */
+.dashboard-card2 > div > p:nth-of-type(1) {
+  grid-area: title;
+  color: #005691;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* Descripcion de la tarea */
+.dashboard-card2 > div > p:nth-of-type(2) {
+  grid-area: desc;
+}
+
+/* Estado y fecha de la tarea */
+.dashboard-card2 > div > p:nth-of-type(3) {
+  grid-area: meta;
+  color: #9CA3AF;
+  font-size: 0.78rem;
+}
+
+/* Boton para completar o marcar pendiente la tarea */
+.dashboard-card2 > div > button.default {
+  grid-area: toggle;
+  justify-self: start;
+  width: auto;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid #BAE6FD;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #005691;
+  background: #E0F2FE;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+/* Efecto hover del boton de completar tarea */
+.dashboard-card2 > div > button.default:hover {
+  background: #BAE6FD;
+  border-color: #7DD3FC;
+}
+
+/* Boton para eliminar la tarea */
+.dashboard-card2 > div > button.danger {
+  grid-area: delete;
+  justify-self: end;
+  width: auto;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid #FECACA;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #B91C1C;
+  background: #FEE2E2;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+/* Efecto hover del boton de eliminar tarea */
+.dashboard-card2 > div > button.danger:hover {
+  background: #FECACA;
+  border-color: #FCA5A5;
+}
+
+/* Estado vacio cuando no hay tareas */
+.dashboard-card2 > h2 {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 2rem 1rem;
+  color: #6B7280;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  border: 1px dashed #E5E7EB;
+  border-radius: 16px;
 }
 
 /* Ajustes para tablets y pantallas medianas */
 @media (min-width: 768px) {
-  .dashboard-page {
+  /* Header en una fila: titulo, usuario y logout */
+  .dashboard-card {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "title info logout"
+      "subtitle info logout";
+    align-items: center;
+    column-gap: 1.5rem;
+    padding: 1rem 2rem;
+  }
+
+  /* El bloque de usuario conserva su tamano y se centra verticalmente */
+  .dashboard-card .user-info {
+    align-self: center;
+    min-width: 220px;
+  }
+
+  /* El boton de logout pasa a tamano automatico */
+  .dashboard-card .btn-logout {
+    justify-self: end;
+    width: auto;
+  }
+
+  /* Las tareas ocupan el 100% del ancho del panel, una debajo de otra */
+  .dashboard-card2 {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
     padding: 2rem;
   }
 
-  .dashboard-card {
-    padding: 2.5rem 2rem;
+  /* Formulario en una sola linea: los dos inputs y el boton Agregar */
+  .dashboard-card2 form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    grid-template-areas:
+      "labelTitle labelDesc ."
+      "inputTitle inputDesc button";
+    align-items: center;
+    gap: 0.4rem 0.75rem;
+  }
+
+  /* El boton Agregar queda en la fila de los inputs y con su misma altura */
+  .dashboard-card2 form .button {
+    margin-top: 0;
+    width: auto;
+    align-self: stretch;
   }
 }
 
 /* Ajustes para pantallas grandes (desktop) */
 @media (min-width: 1024px) {
+  /* Header con mas respiracion horizontal */
   .dashboard-card {
-    max-width: 440px;
-    padding: 3rem 2.5rem;
+    padding: 1.1rem 3rem;
+  }
+
+  /* Panel de tareas con mas padding lateral */
+  .dashboard-card2 {
+    padding: 2.5rem 3rem 3.5rem;
   }
 }
 
-/* Tema oscuro manteniendo la paleta de colores definida */
+/* Tema oscuro: se profundiza el fondo y las sombras, el panel sigue blanco */
 @media (prefers-color-scheme: dark) {
   .dashboard-page {
-    background: linear-gradient(145deg, #050d1a 0%, #081226 25%, #0a1a33 50%, #0d2140 75%, #10264d 100%);
+    background: linear-gradient(160deg, #050d1a 0%, #081226 25%, #0a1a33 50%, #0d2140 75%, #10264d 100%);
   }
 
   .dashboard-page::before {
-    background: linear-gradient(145deg, #050d1a 0%, #081226 25%, #0a1a33 50%, #0d2140 75%, #10264d 100%);
+    background: linear-gradient(160deg, #050d1a 0%, #081226 25%, #0a1a33 50%, #0d2140 75%, #10264d 100%);
   }
 
   .dashboard-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom-color: #E5E7EB;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .dashboard-card2 {
     background: #FFFFFF;
-    border-color: #E5E7EB;
-    box-shadow:
-      0 4px 6px rgba(0, 0, 0, 0.4),
-      0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.4);
   }
 
-  .dashboard-card h1 {
-    color: #005691;
+  .dashboard-card2 > div {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
-  .dashboard-card .subtitle {
-    color: #6B7280;
-  }
-
-  .user-info {
-    background: #F9FAFB;
-    border-color: #E5E7EB;
-  }
-
-  .user-info .user-icon {
-    background: linear-gradient(135deg, #005691 0%, #0069b4 100%);
-    box-shadow: 0 4px 12px rgba(0, 86, 145, 0.3);
-  }
-
-  .user-info .user-email {
-    color: #374151;
-  }
-
-  .btn-logout {
-    background: #005691;
-  }
-
-  .btn-logout:hover {
-    background: #0069b4;
-    box-shadow: 0 4px 12px rgba(0, 86, 145, 0.3);
+  .dashboard-card2 > div:hover {
+    box-shadow: 0 8px 20px rgba(0, 86, 145, 0.25);
   }
 }
-

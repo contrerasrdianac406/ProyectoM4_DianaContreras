@@ -132,6 +132,7 @@ const DashboardPage = () => {
             {user?.email?.charAt(0).toUpperCase() || "U"}
           </div>
           <p className="user-email">{user?.email}</p>
+          <p className="user-id">ID: {user?.uid}</p>
         </div>
         <button className="btn-logout" onClick={handleCloseSession}>
           Cerrar sesion
@@ -139,7 +140,7 @@ const DashboardPage = () => {
       </div>
       <br />
 
-    <section className="dashboard-card">
+    <section className="dashboard-card2">
       <h1>Tareas</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="task-title">Nueva tarea:</label>
