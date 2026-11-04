@@ -14,15 +14,21 @@ const DashboardPage = () => {
   const [tasks, setTasks] = useState<Task []> ([]);
   const [isloading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [title, setTitle] = useState(" ") ;
-  const [description, setDescription] = useState(" ") ;
+  const [title, setTitle] = useState("") ;
+  const [description, setDescription] = useState("");
+// Estados para la edición en línea de una tarea
+    const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+    const [editTitle, setEditTitle] = useState("");
+    const [editDescription, setEditDescription] = useState("");
+
+
 
 
   useEffect(() => {
 
     const loadTasks = async () => {
       try{
-        const  data = await getTasks();
+        const  data = await getTasks(user?.uid);
         setTasks (data);
       } catch(err){
         setError("Error al cargar las tareas");
@@ -76,6 +82,7 @@ const DashboardPage = () => {
     }
   };
 
+
   const handleDelete = async (task: Task) => {
     setIsLoading(true);
 
@@ -88,6 +95,41 @@ const DashboardPage = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Inicia la edicion en linea de la tarea seleccionada
+  const handleEditar = (task: Task) => {
+    setEditingTaskId(task.id);
+    setEditTitle(task.title);
+    setEditDescription(task.description);
+  };
+
+  // Guarda los cambios de titulo y descripcion de la tarea editada
+  const handleSaveEdit = async (task: Task) => {
+    setIsLoading(true);
+
+    try {
+      const updatedTask = await updateTask({
+        ...task,
+        title: editTitle,
+        description: editDescription,
+      });
+      setTasks(tasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)));
+      setEditingTaskId(null);
+      setEditTitle("");
+      setEditDescription("");
+    } catch {
+      setError("Error al editar la tarea");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Cancela la edicion y descarta los cambios
+  const handleCancelEdit = () => {
+    setEditingTaskId(null);
+    setEditTitle("");
+    setEditDescription("");
   };
  
   // Early return
@@ -161,7 +203,6 @@ const DashboardPage = () => {
           placeholder="Escribí una descripción"
           />
         <br/>
-
         {/* Esta validacion es simple, debe ser mejorada y mas exacta */}
         <Button type="submit" disabled={title.length < 2}>
           Agregar
@@ -172,19 +213,49 @@ const DashboardPage = () => {
         tasks.map((task, i) => (
           // Se pueden agregar inline edition para otros campos, por ejemplo el title
           <div key={i}>
-            <p>Tarea:{task.title}</p>
-            <p>Descripción:{task.description}</p>
-            <p>
-              {task.completed ? "Completada" : "Pendiente"} ·{" "}
-              {new Date(task.createdAt).toLocaleString("es")}
-            </p>
-            <Button onClick={() => void handleToggle(task)}>
-              {task.completed ? "Marcar pendiente" : "Completar"}
-            </Button>
-            
-            <Button variant="danger" onClick={() => void handleDelete(task)}>
-              Eliminar
-            </Button>
+            {editingTaskId === task.id ? (
+              <>
+                <input
+                  className="task-edit-input"
+                  type="text"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  placeholder="Título"
+                />
+                <input
+                  className="task-edit-input"
+                  type="text"
+                  value={editDescription}
+                  onChange={(e) => setEditDescription(e.target.value)}
+                  placeholder="Descripción"
+                />
+                <Button
+                  onClick={() => void handleSaveEdit(task)}
+                  disabled={editTitle.length < 2}
+                >
+                  Guardar
+                </Button>
+                <Button variant="ghost" onClick={handleCancelEdit}>
+                  Cancelar
+                </Button>
+              </>
+            ) : (
+              <>
+                <p>Tarea:{task.title}</p>
+                <p>Descripción:{task.description}</p>
+                <p>
+                  {task.completed ? "Completada" : "Pendiente"} ·{" "}
+                  {new Date(task.createdAt).toLocaleString("es")}
+                </p>
+                <Button onClick={() => void handleToggle(task)}>
+                  {task.completed ? "Marcar pendiente" : "Completar"}
+                </Button>
+                <Button onClick={() => handleEditar(task)}>Editar</Button>
+                <Button variant="danger" onClick={() => void handleDelete(task)}>
+                  Eliminar
+                </Button>
+              </>
+            )}
           </div>
         ))
       ) : (

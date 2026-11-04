@@ -66,7 +66,7 @@
 .dashboard-card .subtitle {
   grid-area: subtitle;
   margin: 0;
-  color: #6B7280;
+  color: #132955;
   font-size: clamp(0.8rem, 2.5vw, 0.9rem);
   line-height: 1.4;
   text-align: left;
@@ -85,7 +85,7 @@
   row-gap: 0.2rem;
   margin: 0;
   padding: 0.6rem 0.75rem;
-  background: #F9FAFB;
+  background: #a3c3e2;
   border: 1px solid #E5E7EB;
   border-radius: 12px;
   box-sizing: border-box;
@@ -112,7 +112,7 @@
 .dashboard-card .user-info .user-email {
   grid-area: email;
   margin: 0;
-  color: #374151;
+  color: #0a1b36;
   font-size: clamp(0.78rem, 2.5vw, 0.88rem);
   font-weight: 500;
   word-break: break-all;
@@ -126,7 +126,7 @@
   max-width: 100%;
   margin: 0;
   padding: 0.15rem 0.55rem;
-  color: #6B7280;
+  color: #2d2f33;
   font-family: var(--mono);
   font-size: clamp(0.65rem, 2vw, 0.72rem);
   letter-spacing: 0.02em;
@@ -192,17 +192,17 @@
   font-size: clamp(1.25rem, 4vw, 1.5rem);
 }
 
-/* Panel blanco de tareas al 100% del ancho de la pantalla */
+/* Panel blanco de tareas al 80% del ancho de la pantalla, centrado */
 .dashboard-card2 {
   flex: 1;
-  width: 100%;
+  width: 80%;
   max-width: none;
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
-  margin: 1.5rem 0 0;
+  margin: 1.5rem auto 0;
   padding: 1.5rem 1.25rem 2.5rem;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 24px 24px 0 0;
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
   text-align: left;
@@ -219,7 +219,7 @@
 .dashboard-card2 h1 {
   grid-column: 1 / -1;
   margin: 0;
-  color: #005691;
+  color: #247db8;
   font-size: clamp(1.25rem, 4vw, 1.6rem);
   font-weight: 700;
   text-align: left;
@@ -239,7 +239,7 @@
   gap: 0.4rem;
   margin: 0;
   padding: 1.25rem;
-  background: #d1e1f0;
+  background: #c2dcf1;
   border: 1px solid #E5E7EB;
   border-radius: 16px;
   box-sizing: border-box;
@@ -256,10 +256,14 @@
 /* Ubicacion de cada etiqueta y campo dentro del grid del formulario */
 .dashboard-card2 form label[for="task-title"] {
   grid-area: labelTitle;
+  color: #113b60;
+  font-size: 1rem;
 }
 
 .dashboard-card2 form label[for="task-description"] {
   grid-area: labelDesc;
+  color: #113b60;
+  font-size: 1rem;
 }
 
 .dashboard-card2 form #task-title {
@@ -278,15 +282,15 @@
   border-radius: 10px;
   font-size: 0.95rem;
   font-family: var(--sans);
-  color: #111827;
-  background: #FFFFFF;
+  color: #365699;
+  background: #ffffff;
   box-sizing: border-box;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 /* Placeholder de los campos del formulario */
 .dashboard-card2 form input::placeholder {
-  color: #9CA3AF;
+  color: #426196;
 }
 
 /* Estado de foco de los campos del formulario */
@@ -327,18 +331,14 @@
 
 /* Tarjeta independiente de cada tarea creada */
 .dashboard-card2 > div {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-areas:
-    "title title"
-    "desc desc"
-    "meta meta"
-    "toggle delete";
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem 0.75rem;
   margin: 0;
   padding: 1rem 1.1rem;
-  background: #ffffff;
+  background: #eaeff7;
   border: 1px solid #E5E7EB;
   border-left: 4px solid #005691;
   border-radius: 16px;
@@ -356,37 +356,37 @@
 
 /* Textos generales dentro de la tarjeta de tarea */
 .dashboard-card2 > div > p {
+  flex: 0 0 100%;
   margin: 0;
-  color: #6B7280;
-  font-size: 0.9rem;
+  color: #294374;
+  font-size: 1.2rem;
   line-height: 1.45;
   text-align: left;
 }
 
 /* Titulo de la tarea */
 .dashboard-card2 > div > p:nth-of-type(1) {
-  grid-area: title;
-  color: #005691;
-  font-size: 1rem;
-  font-weight: 700;
+  color: #2478b1;
+  font-size: 1.3rem;
+  font-weight: 500;
 }
 
 /* Descripcion de la tarea */
 .dashboard-card2 > div > p:nth-of-type(2) {
-  grid-area: desc;
+  color: #010816;
+  font-size: 1.0rem;
+  font-weight: 500;
 }
 
 /* Estado y fecha de la tarea */
 .dashboard-card2 > div > p:nth-of-type(3) {
-  grid-area: meta;
-  color: #9CA3AF;
-  font-size: 0.78rem;
+  color: #19253a;
+  font-size: 0.9rem;
 }
 
 /* Boton para completar o marcar pendiente la tarea */
 .dashboard-card2 > div > button.default {
-  grid-area: toggle;
-  justify-self: start;
+  flex: 0 0 auto;
   width: auto;
   padding: 0.55rem 0.85rem;
   border: 1px solid #BAE6FD;
@@ -396,19 +396,19 @@
   color: #005691;
   background: #E0F2FE;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 
-/* Efecto hover del boton de completar tarea */
+/* Efecto hover del boton de completar tarea: verde */
 .dashboard-card2 > div > button.default:hover {
-  background: #BAE6FD;
-  border-color: #7DD3FC;
+  background: #16A34A;
+  border-color: #16A34A;
+  color: #FFFFFF;
 }
 
 /* Boton para eliminar la tarea */
 .dashboard-card2 > div > button.danger {
-  grid-area: delete;
-  justify-self: end;
+  flex: 0 0 auto;
   width: auto;
   padding: 0.55rem 0.85rem;
   border: 1px solid #FECACA;
@@ -425,6 +425,49 @@
 .dashboard-card2 > div > button.danger:hover {
   background: #FECACA;
   border-color: #FCA5A5;
+}
+
+/* Campos de edicion en linea dentro de la tarjeta de tarea */
+.dashboard-card2 > div > .task-edit-input {
+  flex: 0 0 100%;
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #BAE6FD;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-family: var(--sans);
+  color: #111827;
+  background: #F9FAFB;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Foco de los campos de edicion */
+.dashboard-card2 > div > .task-edit-input:focus {
+  outline: none;
+  border-color: #005691;
+  box-shadow: 0 0 0 3px rgba(0, 86, 145, 0.12);
+}
+
+/* Boton cancelar de la edicion en linea */
+.dashboard-card2 > div > button.ghost {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+  background: #F3F4F6;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+/* Hover del boton cancelar */
+.dashboard-card2 > div > button.ghost:hover {
+  background: #E5E7EB;
+  border-color: #D1D5DB;
 }
 
 /* Estado vacio cuando no hay tareas */
