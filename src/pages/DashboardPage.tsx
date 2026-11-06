@@ -7,6 +7,17 @@ import { addTask, deleteTask, getTasks, updateTask } from "../services/taskServi
 import Button from "../ui/Button/Button";
 
 
+
+// Estados para conexión de envio de correo
+type FormStatus = "idle" | "loading" | "success" | "error";
+
+type ApiResponse = {
+  message?: string;
+  error?: string;
+  detail?: string;
+};
+
+
 const DashboardPage = () => {
 
   const navigate = useNavigate();
@@ -16,19 +27,20 @@ const DashboardPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState("") ;
   const [description, setDescription] = useState("");
-// Estados para la edición en línea de una tarea
-    const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
-    const [editTitle, setEditTitle] = useState("");
-    const [editDescription, setEditDescription] = useState("");
-
-
+  // Estados para la edición en línea de una tarea
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  //Estados del correo
+  const [status, setStatus] = useState<FormStatus>("idle");    
+  const [feedback, setFeedback] = useState("");
 
 
   useEffect(() => {
 
     const loadTasks = async () => {
       try{
-        const  data = await getTasks(user?.uid);
+        const  data = await getTasks(user?.uid ?? "");
         setTasks (data);
       } catch(err){
         setError("Error al cargar las tareas");
@@ -40,11 +52,21 @@ const DashboardPage = () => {
     
   }, []);
 
+  // Oculta automaticamente el mensaje de feedback 4 segundos despues del resultado
+  useEffect(() => {
+    if (!feedback) return;
+    if (status !== "success" && status !== "error") return;
+
+    const timer = setTimeout(() => setFeedback(""), 4000);
+
+    return () => clearTimeout(timer);
+  }, [status, feedback]);
+
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
-
-    setIsLoading(true);
-
+    //setIsLoading(true);
+      setStatus("loading");
+      setFeedback("Enviando mensaje...");
     try {
       const newTask = await addTask({
         title: title,
@@ -53,15 +75,51 @@ const DashboardPage = () => {
         userId: user?.uid ?? "unknown",
         createdAt: new Date().toISOString(),
       });
+            //esto debemos crearlo
+            const response = await fetch("/api/send-email", {
+                method: "POST",
+                //esto debemos crearlo
+                headers: {
+                "Content-Type": "application/json",
+                },
+                //esto debemos crearlo
+                body: JSON.stringify({
+                    name: user?.displayName ?? user?.email ?? "Usuario",
+                    email: user?.email ?? "",
+                    message: `Nueva tarea: ${title}\nDescripción: ${description}`,
+                }),
+            });
+            //esto debemos crearlo con otra variable
+            const data1 = (await response.json()) as ApiResponse;
+
+            //esto debemos crearlo
+            if (!response.ok) {
+                const errorMessage = data1.error ?? "No se pudo enviar el mensaje";
+
+                throw new Error(
+                data1.detail ? `${errorMessage}: ${data1.detail}` : errorMessage,
+                );
+            }    
+            
+            //esto debemos crearlo
+            setStatus("success");
+            setFeedback(data1.message ?? "Mensaje enviado correctamente");
+
       setTasks([...tasks, newTask]);
       setTitle("");
     setDescription("");
-    } catch {
+    } catch (error) {
       setError("Error al crear la tarea");
+      setStatus("error");
+      setFeedback(
+      error instanceof Error ? error.message : "Ocurrió un error inesperado",
+      );
+
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleToggle = async (task: Task) => {
     setIsLoading(true);
@@ -204,10 +262,11 @@ const DashboardPage = () => {
           />
         <br/>
         {/* Esta validacion es simple, debe ser mejorada y mas exacta */}
-        <Button type="submit" disabled={title.length < 2}>
+        <Button type="submit" disabled={title.length < 2 && status === "loading"}>
           Agregar
         </Button>
       </form>
+      {feedback && <p id="feedback" role="status">{feedback}</p>}
       <br />
       {tasks.length !== 0 ? (
         tasks.map((task, i) => (

@@ -27,3 +27,4 @@ dist-ssr
 *.env*
 *.usuario.md
 .vercel
+.vercel
