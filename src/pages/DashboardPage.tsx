@@ -120,6 +120,57 @@ const DashboardPage = () => {
     }
   };
 
+  // Función para enviar reporte por correo electrónico con la misma lógica de handleSubmit
+  const handleEnviarReporte = async (
+    accion: string = "Reporte general de tareas",
+    tareasActuales: Task[] = tasks
+  ) => {
+    setStatus("loading");
+    setFeedback("Enviando reporte por correo...");
+
+    const total = tareasActuales.length;
+    const completadas = tareasActuales.filter((t) => t.completed).length;
+    const pendientes = tareasActuales.filter((t) => !t.completed).length;
+
+    const message =
+      `Acción realizada: ${accion}\n\n` +
+      `Estados actualizados:\n` +
+      `1. Total tareas: ${total}\n` +
+      `2. Tareas completadas: ${completadas}\n` +
+      `3. Tareas Pendientes: ${pendientes}`;
+
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: user?.displayName ?? user?.email ?? "Usuario",
+          email: user?.email ?? "",
+          message: message,
+        }),
+      });
+
+      const data = (await response.json()) as ApiResponse;
+
+      if (!response.ok) {
+        const errorMessage = data.error ?? "No se pudo enviar el reporte";
+        throw new Error(
+          data.detail ? `${errorMessage}: ${data.detail}` : errorMessage
+        );
+      }
+
+      setStatus("success");
+      setFeedback(data.message ?? "Reporte enviado correctamente");
+    } catch (error) {
+      setStatus("error");
+      setFeedback(
+        error instanceof Error ? error.message : "Error al enviar el reporte"
+      );
+    }
+  };
+
 
   const handleToggle = async (task: Task) => {
     setIsLoading(true);
@@ -129,10 +180,14 @@ const DashboardPage = () => {
         ...task,
         completed: !task.completed,
       });
-      setTasks(
-        tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
-      );
+      const nuevasTareas = tasks.map((t) => (t.id === updatedTask.id ? updatedTask : t));
+      setTasks(nuevasTareas);
       setTitle("");
+
+      const accion = !task.completed
+        ? `Tarea completada: "${task.title}"`
+        : `Tarea seleccionada como pendiente: "${task.title}"`;
+      await handleEnviarReporte(accion, nuevasTareas);
     } catch {
       setError("Error al actualizar la tarea");
     } finally {
@@ -146,8 +201,11 @@ const DashboardPage = () => {
 
     try {
       const deletedTask = await deleteTask(task);
-      setTasks(tasks.filter((task) => task.id !== deletedTask.id));
+      const nuevasTareas = tasks.filter((t) => t.id !== deletedTask.id);
+      setTasks(nuevasTareas);
       setTitle("");
+
+      await handleEnviarReporte(`Tarea eliminada: "${task.title}"`, nuevasTareas);
     } catch {
       setError("Error al borrar la tarea");
     } finally {
@@ -189,7 +247,7 @@ const DashboardPage = () => {
     setEditTitle("");
     setEditDescription("");
   };
- 
+
   // Early return
 
   if(isloading){
@@ -265,9 +323,34 @@ const DashboardPage = () => {
         <Button type="submit" disabled={title.length < 2 && status === "loading"}>
           Agregar
         </Button>
+        <br />        
       </form>
       {feedback && <p id="feedback" role="status">{feedback}</p>}
-      <br />
+      <div className="Resumen-tareas">
+        <div className="resumen-card total">
+          <p>Total tareas</p>
+          <h4>{tasks.length}</h4>
+        </div>
+        <div className="resumen-card completadas">
+          <p>Tareas completadas</p>
+          <h4>{tasks.filter((task) => task.completed).length}</h4>
+        </div>
+        <div className="resumen-card pendientes">
+          <p>Tareas Pendientes</p>
+          <h4>{tasks.filter((task) => !task.completed).length}</h4>
+        </div> 
+        <div className="envio-reporte">
+          <button
+            type="button"
+            className="button-envio-reporte"
+            onClick={() => void handleEnviarReporte("Reporte general de tareas solicitado", tasks)}
+            disabled={status === "loading"}
+          >
+            {status === "loading" ? "Enviando reporte..." : "Envío de reporte"}
+          </button>
+        </div>
+        </div>
+
       {tasks.length !== 0 ? (
         tasks.map((task, i) => (
           // Se pueden agregar inline edition para otros campos, por ejemplo el title
@@ -307,7 +390,7 @@ const DashboardPage = () => {
                   {new Date(task.createdAt).toLocaleString("es")}
                 </p>
                 <Button onClick={() => void handleToggle(task)}>
-                  {task.completed ? "Marcar pendiente" : "Completar"}
+                  {task.completed ? "Marcar como pendiente" : "Completada"}
                 </Button>
                 <Button onClick={() => handleEditar(task)}>Editar</Button>
                 <Button variant="danger" onClick={() => void handleDelete(task)}>

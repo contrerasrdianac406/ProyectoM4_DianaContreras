@@ -607,3 +607,199 @@
   font-weight: bold;
 }
 
+/* ==========================================================
+   TARJETAS DE RESUMEN DE TAREAS (.Resumen-tareas)
+   ========================================================== */
+
+/* Contenedor principal del resumen: resetea estilos heredados de .dashboard-card2 > div */
+.dashboard-card2 > .Resumen-tareas {
+  grid-column: 1 / -1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 0.5rem 0 1rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-left: none;
+  border-radius: 0;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
+/* En dispositivos móviles pequeños se apilan de forma ordenada */
+@media (max-width: 680px) {
+  .dashboard-card2 > .Resumen-tareas {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-card2 > .Resumen-tareas:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+/* Tarjeta individual de cada indicador */
+.Resumen-tareas .resumen-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  text-align: center;
+}
+
+.Resumen-tareas .resumen-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 86, 145, 0.1);
+}
+
+/* Titulo del indicador con formato compacto */
+.Resumen-tareas .resumen-card p {
+  margin: 0 0 0.15rem 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Numero / Conteo */
+.Resumen-tareas .resumen-card h4 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Color temático: Total de tareas (Azul) */
+.Resumen-tareas .resumen-card.total {
+  background: linear-gradient(145deg, #f0f7ff 0%, #e0effe 100%);
+  border: 1px solid #bae6fd;
+  border-top: 3px solid #0284c7;
+}
+.Resumen-tareas .resumen-card.total p {
+  color: #0369a1;
+}
+.Resumen-tareas .resumen-card.total h4 {
+  color: #0284c7;
+}
+
+/* Color temático: Tareas completadas (Verde Esmeralda con badge de check) */
+.Resumen-tareas .resumen-card.completadas {
+  background: linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1px solid #86efac;
+  border-top: 3px solid #16a34a;
+}
+.Resumen-tareas .resumen-card.completadas::after {
+  content: "✓";
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #16a34a;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(22, 163, 74, 0.3);
+}
+.Resumen-tareas .resumen-card.completadas p {
+  color: #15803d;
+}
+.Resumen-tareas .resumen-card.completadas h4 {
+  color: #166534;
+}
+
+/* Color temático: Tareas pendientes (Ámbar / Naranja) */
+.Resumen-tareas .resumen-card.pendientes {
+  background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid #fde68a;
+  border-top: 3px solid #d97706;
+}
+.Resumen-tareas .resumen-card.pendientes p {
+  color: #b45309;
+}
+.Resumen-tareas .resumen-card.pendientes h4 {
+  color: #d97706;
+}
+
+/* ==========================================================
+   BOTON DE ENVIO DE REPORTE (.button-envio-reporte)
+   ========================================================== */
+.Resumen-tareas .envio-reporte {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1.2rem;
+  margin-top: 0.5rem;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.button-envio-reporte {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.8rem 2.2rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0284c7 0%, #005691 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 9999px; /* Formato pill moderno */
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.button-envio-reporte::before {
+  content: "✉";
+  font-size: 1.15rem;
+  line-height: 1;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.button-envio-reporte:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 86, 145, 0.38);
+  background: linear-gradient(135deg, #0369a1 0%, #004b7d 100%);
+}
+
+.button-envio-reporte:hover:not(:disabled)::before {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.button-envio-reporte:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 86, 145, 0.3);
+}
+
+.button-envio-reporte:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
