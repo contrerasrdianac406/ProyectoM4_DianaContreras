@@ -41,7 +41,10 @@ const DashboardPage = () => {
     const loadTasks = async () => {
       try{
         const  data = await getTasks(user?.uid ?? "");
-        setTasks (data);
+        const sortedData = [...data].sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setTasks (sortedData);
       } catch(err){
         setError("Error al cargar las tareas");
       } finally {
@@ -105,7 +108,7 @@ const DashboardPage = () => {
             setStatus("success");
             setFeedback(data1.message ?? "Mensaje enviado correctamente");
 
-      setTasks([...tasks, newTask]);
+      setTasks([newTask, ...tasks]);
       setTitle("");
     setDescription("");
     } catch (error) {
@@ -279,6 +282,11 @@ const DashboardPage = () => {
     }
   };
 
+  // Tareas ordenadas cronológicamente: de la más reciente a la más antigua
+  const sortedTasks = [...tasks].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
   return (
   <div className="dashboard-page">
 
@@ -351,8 +359,8 @@ const DashboardPage = () => {
         </div>
         </div>
 
-      {tasks.length !== 0 ? (
-        tasks.map((task, i) => (
+      {sortedTasks.length !== 0 ? (
+        sortedTasks.map((task, i) => (
           // Se pueden agregar inline edition para otros campos, por ejemplo el title
           <div key={i}>
             {editingTaskId === task.id ? (
