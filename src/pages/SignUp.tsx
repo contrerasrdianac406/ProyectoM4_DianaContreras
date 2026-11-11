@@ -9,11 +9,15 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleRegister = async () => {
     try {
       await signUp(email, password);
+      setError("");
+      setSuccess("Usuario registrado exitosamente");
     } catch (err) {
+      setSuccess("");
       setError(getAuthErrorMessage(err));
     }
   };
@@ -54,6 +58,9 @@ const SignUp = () => {
           <button type="submit" className="btn-primary">
             Register
           </button>
+          
+          {success && <p className="signup-success" role="status">{success}</p>}
+          {error && <p className="signup-error">{error}</p>}
         </form>
 
         <div className="divider">o continúa con</div>
@@ -79,9 +86,6 @@ const SignUp = () => {
           </svg>
           Register with Google
         </button>
-
-        {error && <p className="signup-error">{error}</p>}
-
         <p className="signup-footer">
           ¿Ya tienes cuenta? <Link to={"/login"}>Login</Link>
         </p>
