@@ -233,8 +233,10 @@
   grid-template-areas:
     "labelTitle"
     "inputTitle"
+    "errorTitle"
     "labelDesc"
     "inputDesc"
+    "errorDesc"
     "button";
   gap: 0.4rem;
   margin: 0;
@@ -274,6 +276,14 @@
   grid-area: inputDesc;
 }
 
+.dashboard-card2 form #task-title-error {
+  grid-area: errorTitle;
+}
+
+.dashboard-card2 form #task-description-error {
+  grid-area: errorDesc;
+}
+
 /* Campos de texto del formulario: ocupan el ancho de su columna */
 .dashboard-card2 form input {
   width: 100%;
@@ -298,6 +308,22 @@
   outline: none;
   border-color: #005691;
   box-shadow: 0 0 0 3px rgba(0, 86, 145, 0.12);
+}
+
+/* Borde rojo cuando el campo no cumple la validacion */
+.dashboard-card2 form input[aria-invalid="true"] {
+  border-color: #fca5a5;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+/* Mensaje de validacion debajo de cada campo */
+.dashboard-card2 form .task-field-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
 }
 
 /* Boton de agregar tarea */
@@ -520,7 +546,8 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
     grid-template-areas:
       "labelTitle labelDesc ."
-      "inputTitle inputDesc button";
+      "inputTitle inputDesc button"
+      "errorTitle errorDesc .";
     align-items: center;
     gap: 0.4rem 0.75rem;
   }
@@ -576,7 +603,8 @@
   }
 }
 
-#feedback {
+#feedback,
+#report-feedback {
   background-color: #e8f5f8; /* Un verde pastel muy suave y limpio */
   color: #0d6832;             /* Texto verde oscuro con excelente contraste */
   border: 1px solid #b8ebd0;  /* Borde sutil del mismo tono */
@@ -592,8 +620,15 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
+/* El mensaje del reporte vive dentro de .envio-reporte, sin margen inferior extra */
+#report-feedback {
+  margin-bottom: 0;
+  text-align: left;
+}
+
 /* Opcional: si le agregas un icono de verificación (check) */
-#feedback::before {
+#feedback::before,
+#report-feedback::before {
   content: "✔";
   display: inline-flex;
   align-items: center;
@@ -747,8 +782,10 @@
 .Resumen-tareas .envio-reporte {
   grid-column: 1 / -1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 0.9rem;
   padding-top: 1.2rem;
   margin-top: 0.5rem;
   border-top: 1px dashed #cbd5e1;

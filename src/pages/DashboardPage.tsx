@@ -31,9 +31,14 @@ const DashboardPage = () => {
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
-  //Estados del correo
-  const [status, setStatus] = useState<FormStatus>("idle");    
-  const [feedback, setFeedback] = useState("");
+  // Estados de alertas independientes: alta de tarea y envio de reporte
+  const [taskStatus, setTaskStatus] = useState<FormStatus>("idle");
+  const [taskFeedback, setTaskFeedback] = useState("");
+  const [reportStatus, setReportStatus] = useState<FormStatus>("idle");
+  const [reportFeedback, setReportFeedback] = useState("");
+  // Estados para mostrar los mensajes de validacion de cada campo
+  const [titleTouched, setTitleTouched] = useState(false);
+  const [descriptionTouched, setDescriptionTouched] = useState(false);
 
 
   useEffect(() => {
@@ -55,21 +60,43 @@ const DashboardPage = () => {
     
   }, []);
 
-  // Oculta automaticamente el mensaje de feedback 4 segundos despues del resultado
+  // Oculta automaticamente la alerta de la tarea 4 segundos despues del resultado
   useEffect(() => {
-    if (!feedback) return;
-    if (status !== "success" && status !== "error") return;
+    if (!taskFeedback) return;
+    if (taskStatus !== "success" && taskStatus !== "error") return;
 
-    const timer = setTimeout(() => setFeedback(""), 4000);
+    const timer = setTimeout(() => setTaskFeedback(""), 4000);
 
     return () => clearTimeout(timer);
-  }, [status, feedback]);
+  }, [taskStatus, taskFeedback]);
+
+  // Oculta automaticamente la alerta del reporte 4 segundos despues del resultado
+  useEffect(() => {
+    if (!reportFeedback) return;
+    if (reportStatus !== "success" && reportStatus !== "error") return;
+
+    const timer = setTimeout(() => setReportFeedback(""), 4000);
+
+    return () => clearTimeout(timer);
+  }, [reportStatus, reportFeedback]);
+
+  // Validacion: minimo 2 caracteres sin contar espacios
+  const isTitleValid = title.trim().length >= 2;
+  const isDescriptionValid = description.trim().length >= 2;
+  const isFormValid = isTitleValid && isDescriptionValid;
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
+
+    if (!isFormValid) {
+      setTitleTouched(true);
+      setDescriptionTouched(true);
+      return;
+    }
+
     //setIsLoading(true);
-      setStatus("loading");
-      setFeedback("Enviando mensaje...");
+      setTaskStatus("loading");
+      setTaskFeedback("Enviando mensaje...");
     try {
       const newTask = await addTask({
         title: title,
@@ -105,16 +132,18 @@ const DashboardPage = () => {
             }    
             
             //esto debemos crearlo
-            setStatus("success");
-            setFeedback(data1.message ?? "Mensaje enviado correctamente");
+            setTaskStatus("success");
+            setTaskFeedback(data1.message ?? "Mensaje enviado correctamente");
 
       setTasks([newTask, ...tasks]);
       setTitle("");
     setDescription("");
+      setTitleTouched(false);
+      setDescriptionTouched(false);
     } catch (error) {
       setError("Error al crear la tarea");
-      setStatus("error");
-      setFeedback(
+      setTaskStatus("error");
+      setTaskFeedback(
       error instanceof Error ? error.message : "Ocurrió un error inesperado",
       );
 
@@ -128,8 +157,8 @@ const DashboardPage = () => {
     accion: string = "Reporte general de tareas",
     tareasActuales: Task[] = tasks
   ) => {
-    setStatus("loading");
-    setFeedback("Enviando reporte por correo...");
+    setReportStatus("loading");
+    setReportFeedback("Enviando reporte por correo...");
 
     const total = tareasActuales.length;
     const completadas = tareasActuales.filter((t) => t.completed).length;
@@ -164,11 +193,11 @@ const DashboardPage = () => {
         );
       }
 
-      setStatus("success");
-      setFeedback(data.message ?? "Reporte enviado correctamente");
+      setReportStatus("success");
+      setReportFeedback(data.message ?? "Reporte enviado correctamente");
     } catch (error) {
-      setStatus("error");
-      setFeedback(
+      setReportStatus("error");
+      setReportFeedback(
         error instanceof Error ? error.message : "Error al enviar el reporte"
       );
     }
@@ -314,26 +343,50 @@ const DashboardPage = () => {
           id="task-title"
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            setTitleTouched(true);
+          }}
+          onBlur={() => setTitleTouched(true)}
           placeholder="Escribí una tarea"
+          aria-invalid={titleTouched && !isTitleValid}
+          aria-describedby={titleTouched && !isTitleValid ? "task-title-error" : undefined}
           />
+        {titleTouched && !isTitleValid && (
+          <p id="task-title-error" className="task-field-error" role="alert">
+            El título debe tener al menos 2 caracteres.
+          </p>
+        )}
         <br/>
         <label htmlFor="task-description">Descripción:</label>
           <input
           id="task-description"
           type="text"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            setDescriptionTouched(true);
+          }}
+          onBlur={() => setDescriptionTouched(true)}
           placeholder="Escribí una descripción"
+          aria-invalid={descriptionTouched && !isDescriptionValid}
+          aria-describedby={
+            descriptionTouched && !isDescriptionValid ? "task-description-error" : undefined
+          }
           />
+        {descriptionTouched && !isDescriptionValid && (
+          <p id="task-description-error" className="task-field-error" role="alert">
+            La descripción debe tener al menos 2 caracteres.
+          </p>
+        )}
         <br/>
-        {/* Esta validacion es simple, debe ser mejorada y mas exacta */}
-        <Button type="submit" disabled={title.length < 2 && status === "loading"}>
+        {/* El boton se habilita solo cuando ambos campos tienen al menos 2 caracteres */}
+        <Button type="submit" disabled={!isFormValid}>
           Agregar
         </Button>
         <br />        
       </form>
-      {feedback && <p id="feedback" role="status">{feedback}</p>}
+      {taskFeedback && <p id="feedback" role="status">{taskFeedback}</p>}
       <div className="Resumen-tareas">
         <div className="resumen-card total">
           <p>Total tareas</p>
@@ -352,10 +405,11 @@ const DashboardPage = () => {
             type="button"
             className="button-envio-reporte"
             onClick={() => void handleEnviarReporte("Reporte general de tareas solicitado", tasks)}
-            disabled={status === "loading"}
+            disabled={reportStatus === "loading"}
           >
-            {status === "loading" ? "Enviando reporte..." : "Envío de reporte"}
+            {reportStatus === "loading" ? "Enviando reporte..." : "Envío de reporte"}
           </button>
+          {reportFeedback && <p id="report-feedback" role="status">{reportFeedback}</p>}
         </div>
         </div>
 
